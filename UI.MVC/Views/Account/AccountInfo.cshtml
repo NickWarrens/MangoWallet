@@ -1,0 +1,76 @@
+﻿@model Domain.Users.User
+
+@{
+    ViewBag.Title = "Account Info";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/AccountInfo.css" />
+<div class="account-container">
+    <h2>@ViewBag.Title</h2>
+
+    <p><strong>Name:</strong> @Model.Name</p>
+
+    <p>
+        <strong>Passkey:</strong>
+        <span id="passkey" class="passkey-text" style="display: none;">@Model.Key</span>
+        <button type="button" id="togglePasskeyBtn" class="btn btn-secondary">Show</button>
+    </p>
+
+    <div class="action-buttons">
+        <form method="post" action="@Url.Action("LogOut", "Account")">
+            <button type="submit" class="btn btn-danger">Log Out</button>
+        </form>
+
+        <button type="button" id="deleteAccountBtn" class="btn btn-warning">Delete Account</button>
+    </div>
+</div>
+
+<!-- Delete Account Confirmation Modal -->
+<div class="modal" id="deleteAccountModal">
+    <div class="modal-content">
+        <span class="close" id="closeDeleteModal">&times;</span>
+        <h3>Confirm Account Deletion</h3>
+        <p>Please enter your passkey to confirm:</p>
+        <form method="post" action="@Url.Action("DeleteAccount", "Account")">
+            <div class="form-group">
+                <label for="confirmPasskey">Passkey:</label>
+                <input type="text" id="confirmPasskey" name="accountKey" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('togglePasskeyBtn').addEventListener('click', function() {
+        var passkey = document.getElementById('passkey');
+        var button = document.getElementById('togglePasskeyBtn');
+
+        if (passkey.style.display === 'none') {
+            passkey.style.display = 'inline-block';
+            button.textContent = 'Hide';
+        } else {
+            passkey.style.display = 'none';
+            button.textContent = 'Show';
+        }
+    });
+
+    const deleteAccountModal = document.getElementById("deleteAccountModal");
+    const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+    const closeDeleteModal = document.getElementById("closeDeleteModal");
+
+    deleteAccountBtn.addEventListener("click", () => {
+        deleteAccountModal.style.display = "flex";
+    });
+
+    closeDeleteModal.addEventListener("click", () => {
+        deleteAccountModal.style.display = "none";
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === deleteAccountModal) {
+            deleteAccountModal.style.display = "none";
+        }
+    });
+</script>

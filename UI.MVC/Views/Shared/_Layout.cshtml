@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/css/Layout.css">
+</head>
+<body>
+<header class="header">
+    <a href="#" class="logo">MangoWallet</a>
+    <nav class="navbar">
+        <a href="@Url.Action("Index", "Home")">Home</a>
+        <a href="@Url.Action("Manage", "Account")">Account</a>
+        <a href="#">Socials</a>
+    </nav>
+</header>
+
+<main class="content">
+    @RenderBody()
+</main>
+</body>
+</html>

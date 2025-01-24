@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Sign up";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/SignUp.css" />
+<div class="signup-container">
+    <h2>@ViewData["Title"]</h2>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.SuccessMessage
+        </div>
+    }
+
+    <form method="post" action="@Url.Action("SignUp", "Account")" class="signup-form">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+</div>

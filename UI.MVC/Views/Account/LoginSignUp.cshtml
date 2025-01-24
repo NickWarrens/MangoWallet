@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Login / Sign Up";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/LoginSignUp.css" />
+<div class="auth-container">
+    <h2>You are not logged in.</h2>
+
+    <div class="auth-buttons">
+        <a href="@Url.Action("LogIn", "Account")" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="icon">
+                <path d="M12 2L2 7h4v7h8V7h4z"/>
+            </svg>
+            Log In
+        </a>
+        <a href="@Url.Action("SignUp", "Account")" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="icon">
+                <path d="M12 2L2 7h4v7h8V7h4z"/>
+            </svg>
+            Sign Up
+        </a>
+    </div>
+</div>

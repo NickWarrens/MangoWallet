@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Login.css" />
+<div class="auth-container">
+    <h2>@ViewData["Title"]</h2>
+
+    <form method="post" asp-action="Login" class="auth-form">
+        <div class="form-group">
+            <label for="passKey">Passkey</label>
+            <input type="text" id="passKey" name="passkey" required class="input-field"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
