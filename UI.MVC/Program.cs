@@ -6,29 +6,9 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 
-var rawUrl = Environment.GetEnvironmentVariable("MYSQL_URL") ?? "";
-Console.WriteLine($"[DEBUG] MYSQL_URL = '{rawUrl}'");
-
-if (rawUrl.StartsWith("mysql://", StringComparison.OrdinalIgnoreCase))
-{
-    // Parse the URI
-    var uri = new Uri(rawUrl);
-    var userInfo = uri.UserInfo.Split(':');
-
-    var host = uri.Host;
-    var port = uri.Port;
-    var user = userInfo[0];
-    var pass = userInfo[1];
-    var database = uri.AbsolutePath.TrimStart('/'); // e.g. "railway"
-
-    // Build a normal MySQL connection string
-    rawUrl = $"Server={host};Port={port};User={user};Password={pass};Database={database}";
-}
-Console.WriteLine($"[DEBUG] Generated Connection String: {rawUrl}");
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "db", "Wallet.db");
 builder.Services.AddDbContext<MangoWalletDbContext>(options =>
-{
-    options.UseMySql(rawUrl, ServerVersion.AutoDetect(rawUrl));
-});
+    options.UseSqlite($"Data Source={dbPath}"));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
