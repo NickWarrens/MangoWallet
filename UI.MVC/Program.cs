@@ -6,9 +6,12 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL"); 
+var rawUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+Console.WriteLine($"[DEBUG] DATABASE_URL = '{rawUrl}'");
 builder.Services.AddDbContext<MangoWalletDbContext>(options =>
-    options.UseNpgsql(connectionString));
+{
+    options.UseNpgsql(rawUrl);
+});
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
