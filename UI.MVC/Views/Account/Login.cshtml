@@ -3,7 +3,8 @@
     Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/Login.css" />
+<link rel="stylesheet" href="~/css/LogIn.css" />
+
 <div class="auth-container">
     <h2>@ViewData["Title"]</h2>
 
@@ -15,3 +16,10 @@
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="error-message">
+        @ViewBag.ErrorMessage
+    </div>
+}
