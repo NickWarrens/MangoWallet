@@ -6,11 +6,10 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 
-var rawUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-Console.WriteLine($"[DEBUG] DATABASE_URL = '{rawUrl}'");
+var url = Environment.GetEnvironmentVariable("MYSQL_URL");
 builder.Services.AddDbContext<MangoWalletDbContext>(options =>
 {
-    options.UseNpgsql(rawUrl);
+    options.UseMySql(url, ServerVersion.AutoDetect(url));
 });
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
