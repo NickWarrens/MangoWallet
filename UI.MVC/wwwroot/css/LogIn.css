@@ -1,0 +1,122 @@
+﻿body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Changed from flex-start to center */
+    min-height: 100vh;
+    background: var(--bg-primary);
+    color: #fff;
+    font-family: "Trebuchet MS", sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+    background: #40424f;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px; /* Added margin for spacing from the error message */
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-size: 1.2rem;
+    color: #ddd;
+}
+
+.input-field {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f0f0f0;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.3);
+}
+
+button {
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    background: #1c86ee;
+    box-shadow: 0 4px 8px rgba(30, 144, 255, 0.4);
+}
+
+.error-message {
+    font-size: 1rem;
+    color: #ff6f61;
+    background: #402f2f;
+    border: 1px solid #e55347;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px auto; /* Added bottom margin for spacing */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .auth-container {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .input-field {
+        font-size: 1rem;
+    }
+
+    button {
+        font-size: 1rem;
+    }
+}

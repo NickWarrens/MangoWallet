@@ -1,0 +1,210 @@
+﻿body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    min-height: 100vh;
+    background: var(--bg-primary);
+    color: #fff;
+    font-family: "Trebuchet MS", sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.account-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content inside the container */
+    text-align: center;
+    padding: 20px;
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+    background: #40424f;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #ddd;
+    margin: 5px 0;
+}
+
+.passkey-text {
+    font-family: "Courier New", Courier, monospace;
+    word-wrap: break-word;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    display: inline-block;
+    color: black;
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    box-shadow: 0 4px 8px rgba(30, 144, 255, 0.4);
+}
+
+#togglePasskeyBtn {
+    background: #1e90ff;
+    color: white;
+    margin-left: 10px;
+}
+
+#togglePasskeyBtn:hover {
+    background: #1c86ee;
+}
+
+#deleteAccountBtn {
+    background: #ff6f61;
+    color: white;
+    margin-left: 10px;
+}
+
+#deleteAccountBtn:hover {
+    background: #e65c50;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #40424f;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    color: #fff;
+    text-align: center;
+}
+
+.modal-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+.modal-content .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-content label {
+    font-size: 1rem;
+    color: #ddd;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f0f0f0;
+    color: #333;
+    margin-top: 5px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content input:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.3);
+}
+
+.modal-content button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff6f61;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #e65c50;
+    box-shadow: 0 4px 8px rgba(255, 111, 97, 0.4);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #ccc;
+}
+
+/* Responsive styling */
+@media (max-width: 600px) {
+    .account-container {
+        padding: 20px 10px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    button {
+        font-size: 1rem;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+}
