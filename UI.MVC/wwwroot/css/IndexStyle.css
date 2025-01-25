@@ -57,13 +57,24 @@ h2 {
 .actions {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    align-items: center;
+    gap: 20px; /* Increased gap for better spacing */
     flex-wrap: wrap;
     margin-top: 20px;
+    width: 100%;
+    max-width: 800px; /* Constrain width for alignment */
+    text-align: center;
+}
+
+.actions button {
+    flex: 1 1 auto;
+    max-width: 200px; /* Ensures buttons are uniform in size */
 }
 
 .actions form {
+    flex: 1 1 auto;
     display: inline-block;
+    max-width: 200px;
 }
 
 button {
@@ -104,6 +115,7 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
     color: #fff;
+    text-align: center;
 }
 
 .modal-content h3 {
@@ -115,6 +127,9 @@ button:hover {
 
 .modal-content .form-group {
     margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .modal-content label {
@@ -131,11 +146,32 @@ button:hover {
     border: 1px solid #ddd;
     background: #f0f0f0;
     color: #333;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.3);
 }
 
 .modal-content button {
     display: block;
     margin: 20px auto 0 auto;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #1e90ff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content button:hover {
+    background: #1c86ee;
+    box-shadow: 0 4px 8px rgba(30, 144, 255, 0.4);
 }
 
 .close {
@@ -146,8 +182,21 @@ button:hover {
     font-weight: bold;
     color: #fff;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .close:hover {
     color: #ccc;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .actions {
+        flex-direction: column;
+        gap: 15px; /* Reduce gap for smaller screens */
+    }
+
+    button {
+        width: 100%;
+    }
 }

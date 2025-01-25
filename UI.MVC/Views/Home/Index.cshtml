@@ -6,7 +6,7 @@
     Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/Index.css" />
+<link rel="stylesheet" href="~/css/IndexStyle.css" />
 <h1>Welcome back, @Model.Name</h1>
 
 <h2>Wallet (@Model.UserWallet.WalletKey):</h2>
@@ -26,9 +26,8 @@
 
     @if (@Model.IsAdmin)
     {
-        <form asp-action="ManageCurrency" asp-controller="Currency" method="get">
-            <button type="submit" class="btn btn-secondary">Add/Subtract currency</button>
-        </form>
+        <button class="btn btn-secondary" id="manage-currency-btn">Add/Subtract Coins</button>
+        <button class="btn btn-secondary" id="add-user-currency-btn">Add Currency to User</button>
         
         <form asp-action="AdminPage" asp-controller="Admin" method="get">
             <button type="submit" class="btn btn-secondary">Admin Page</button>
@@ -102,5 +101,71 @@
         </form>
     </div>
 </div>
+
+<div class="modal" id="manage-currency-modal">
+    <div class="modal-content">
+        <span class="close" id="close-manage-currency">&times;</span>
+        <h3>Add/Subtract Currency</h3>
+        <form method="post" action="@Url.Action("ManageCurrency", "Home")">
+            <div class="form-group">
+                <label for="manageCurrency">Currency</label>
+                <select id="manageCurrency" name="currency" class="form-control" required>
+                    @foreach (var currency in Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>())
+                    {
+                        <option value="@currency">@CurrencyMetaDataProvider.GetCurrencyName(currency)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" class="form-control" step="0.01" min="0.01" required />
+            </div>
+
+            <div class="form-group">
+                <label for="operation">Operation</label>
+                <select id="operation" name="operation" class="form-control" required>
+                    <option value="add">Add</option>
+                    <option value="subtract">Subtract</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="add-user-currency-modal">
+    <div class="modal-content">
+        <span class="close" id="close-add-user-currency">&times;</span>
+        <h3>Add Currency to User</h3>
+        <form method="post" action="@Url.Action("AddCurrencyToUser", "Home")">
+            <div class="form-group">
+                <label for="userKey">Select User</label>
+                <select id="userKey" name="userKey" class="form-control" required>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="currency">Currency</label>
+                <select id="currency" name="currency" class="form-control" required>
+                    @foreach (var currency in Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>())
+                    {
+                        <option value="@currency">@CurrencyMetaDataProvider.GetCurrencyName(currency)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" class="form-control" step="0.01" min="0.01" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+
 
 <script src="~/js/popus.js"></script>
