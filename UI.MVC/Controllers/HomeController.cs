@@ -36,7 +36,7 @@ public class HomeController : Controller
                 _manager.AddAmountToUserAsync(user, currencyType, amount);
             }
             else if (operation == "subtract")
-            { 
+            {
                 _manager.SubtractAmountToUserAsync(user, currencyType, amount);
             }
 
@@ -49,6 +49,7 @@ public class HomeController : Controller
 
         return RedirectToAction("Index");
     }
+
     
     [HttpGet]
     public IActionResult GetAllUsers()

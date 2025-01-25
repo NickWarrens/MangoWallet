@@ -109,12 +109,13 @@
         <form method="post" action="@Url.Action("ManageCurrency", "Home")">
             <div class="form-group">
                 <label for="manageCurrency">Currency</label>
-                <select id="manageCurrency" name="currency" class="form-control" required>
+                <select id="manageCurrency" name="currencyType" class="form-control" required>
                     @foreach (var currency in Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>())
                     {
                         <option value="@currency">@CurrencyMetaDataProvider.GetCurrencyName(currency)</option>
                     }
                 </select>
+
             </div>
 
             <div class="form-group">
