@@ -5,9 +5,10 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "db", "Wallet.db");
+
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL"); 
 builder.Services.AddDbContext<MangoWalletDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
