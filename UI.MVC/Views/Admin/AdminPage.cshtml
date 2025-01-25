@@ -1,0 +1,48 @@
+﻿@using Domain.Currencies.BaseCurrency
+@using Domain.Balances
+@model IEnumerable<Domain.Users.User>
+
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/AdminPage.css" />
+<h1>Admin Page</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>User Key</th>
+            <th>Wallet Key</th>
+            <th>Balances</th>
+            <th>Delete?</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Name @(user.IsAdmin ? "(Admin)" : "")</td>
+                <td>@user.Key</td>
+                <td>@user.UserWallet.WalletKey</td>
+                <td>
+                    <ul>
+                        @foreach (var balance in user.UserWallet?.CurrencyBalances ?? Enumerable.Empty<CurrencyBalance>())
+                        {
+                            <li>@CurrencyMetaDataProvider.GetCurrencyName(balance.CurrencyType): @balance.Balance</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <form asp-action="DeleteUser" asp-controller="Admin" method="post">
+                        <input type="hidden" name="userKey" value="@user.Key" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

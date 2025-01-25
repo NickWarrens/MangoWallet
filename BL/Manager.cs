@@ -11,6 +11,7 @@ public class Manager : IManager
     private IUserRepository _userRepository;
     private IWalletRepository _userWallerRepository;
     private ICurrencyBalanceRepository _currencyBalanceRepository;
+    private IManager _managerImplementation;
 
     public Manager(IUserRepository userRepository, IWalletRepository userWallerRepository,
         ICurrencyBalanceRepository currencyBalanceRepository)
@@ -115,5 +116,10 @@ public class Manager : IManager
     public Task<User?> GetUserByKey(string passKey)
     {
         return _userRepository.GetByAccountKeyAsync(passKey);
+    }
+
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    {
+        return await _userRepository.GetAllUsersWithDetails();
     }
 }

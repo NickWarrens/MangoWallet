@@ -15,4 +15,5 @@ public interface IManager
         CurrencyType targetCurrency, double amount);
     Task<AccountDeletionResult> DeleteAccount(User user, string accountKey);
     Task<User?> GetUserByKey(string passKey);
+    Task<IEnumerable<User>> GetAllUsersAsync();
 }
