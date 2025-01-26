@@ -1,5 +1,6 @@
 ﻿using BL;
 using Domain.Currencies.BaseCurrency;
+using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UI.MVC.Controllers;
@@ -20,14 +21,18 @@ public class HomeController : Controller
             return RedirectToAction("Manage", "Account");
         }
 
-        var user = _manager.GetUserByKey(HttpContext.Session.GetString("UserKey")).Result;
+        User? user = await _manager.GetUserByKey(HttpContext.Session.GetString("UserKey"));
+        if (user == null)
+        {
+            return RedirectToAction("Manage", "Account");
+        }
         return View(user);
     }
     
     [HttpPost]
     public async Task<IActionResult> ManageCurrency(CurrencyType currencyType, double amount, string operation)
     {
-        var user = _manager.GetUserByKey(HttpContext.Session.GetString("UserKey")).Result;
+        var user = await _manager.GetUserByKey(HttpContext.Session.GetString("UserKey"));
 
         try
         {
@@ -75,7 +80,7 @@ public class HomeController : Controller
 
         try
         {
-            var user = _manager.GetUserByKey(userKey).Result;
+            var user = await _manager.GetUserByKey(userKey);
             if (user == null)
             {
                 TempData["ErrorMessage"] = "User not found.";
