@@ -6,7 +6,12 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 
-var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "db", "Wallet.db");
+var dataDirectory = "/data";
+if (!Directory.Exists(dataDirectory))
+{
+    Directory.CreateDirectory(dataDirectory);
+}
+var dbPath = Path.Combine(dataDirectory, "Wallet.db");
 builder.Services.AddDbContext<MangoWalletDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
