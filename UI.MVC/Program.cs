@@ -21,10 +21,11 @@ builder.Services.AddScoped<ICurrencyBalanceRepository, CurrencyBalanceRepository
 
 builder.Services.AddScoped<IManager, Manager>();
 
-builder.Services.AddSession(option =>
+builder.Services.AddSession(options =>
 {
-    option.IdleTimeout = TimeSpan.FromHours(1);
-    option.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddControllersWithViews();

@@ -16,5 +16,8 @@ public interface IManager
     Task<AccountDeletionResult> DeleteAccount(User user, string accountKey);
     Task<User?> GetUserByKey(string passKey);
     Task<IEnumerable<User>> GetAllUsersAsync();
-    void AddUserAsync(string name, string passKey);
+    Task AddUserAsync(string name, string passKey);
+    Task<CoinFlipResult> PerformCoinFlipAsync(User user, double betAmount, CurrencyType currencyType, string bet);
+    
+    
 }

@@ -1,0 +1,64 @@
+﻿@using Domain.Currencies.BaseCurrency
+@using Domain.Balances
+@model Domain.Users.User
+
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Casino.css" />
+
+<div id="casino-page">
+    <!-- User Balances Section -->
+    <section id="user-balances">
+        <h2>Your Balances</h2>
+        <div class="currency-cards">
+            @foreach (var balance in Model.UserWallet.CurrencyBalances)
+            {
+                <div class="currency-card">
+                    <h3>@CurrencyMetaDataProvider.GetCurrencyName(balance.CurrencyType)</h3>
+                    <p>@balance.Balance @CurrencyMetaDataProvider.GetCurrencySymbol(balance.CurrencyType)</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Coin Flip Game -->
+    <div id="coin-game">
+        <h2>Coin Flip</h2>
+        <form asp-action="CoinFlip" asp-controller="Casino" method="post">
+            <!-- Bet Amount -->
+            <label for="bet-amount">Bet Amount:</label>
+            <input type="number" id="bet-amount" name="betAmount" required min="0.01" step="0.01" placeholder="Enter amount" />
+
+            <!-- Currency Type -->
+            <label for="currency-type">Currency Type:</label>
+            <select id="currency-type" name="currencyType" required>
+                <option value="" disabled selected>Select Currency</option>
+                @foreach (var balance in Model.UserWallet.CurrencyBalances)
+                {
+                    <option value="@balance.CurrencyType">@CurrencyMetaDataProvider.GetCurrencyName(balance.CurrencyType)</option>
+                }
+            </select>
+
+            <!-- Bet Selection -->
+            <label for="bet-selection">Your Bet:</label>
+            <select id="bet-selection" name="bet" required>
+                <option value="" disabled selected>Choose Heads, Tails, or Edge</option>
+                <option value="heads">Heads</option>
+                <option value="tails">Tails</option>
+                <option value="edge">Edge</option>
+            </select>
+
+            <!-- Submit Button -->
+            <button type="submit" id="flip-button">Place Bet & Flip Coin</button>
+        </form>
+
+        @if (TempData["FlipResult"] != null)
+        {
+            <div id="result-container" class="@TempData["ResultType"]">
+                    <p id="result-text">@TempData["FlipResult"]</p>
+                </div>
+        }
+    </div>
+</div>

@@ -123,9 +123,51 @@ public class Manager : IManager
         return await _userRepository.GetAllUsersWithDetails();
     }
 
-    public async void AddUserAsync(string name, string passKey)
+    public async Task AddUserAsync(string name, string passKey)
     {
         User user = new User(name, passKey);
         await _userRepository.AddAsync(user);
     }
+
+    public async Task<CoinFlipResult> PerformCoinFlipAsync(User user, double betAmount, CurrencyType currencyType, string bet)
+        {
+            if (betAmount > user.UserWallet.GetCurrencyBalance(currencyType))
+            {
+                return new CoinFlipResult(false, "Not enough balance.", 0);
+            }
+            
+            var randomValue = new Random().NextDouble();
+            string result;
+            if (randomValue < 0.495)
+            {
+                result = "heads";
+            }
+            else if (randomValue < 0.99)
+            {
+                result = "tails";
+            }
+            else
+            {
+                result = "edge";
+            }
+            if (string.IsNullOrEmpty(bet))
+            {
+                throw new ArgumentException("Bet cannot be null or empty.");
+            }
+            
+            bool isWin = result.Equals(bet.ToLower());
+            string message;
+            if (!isWin)
+            {
+                await SubtractAmountToUserAsync(user, currencyType, betAmount);
+                message = "You lost " + betAmount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType);
+                return new CoinFlipResult(isWin, message, betAmount);
+            }
+            
+            double amount = result == "edge"? 10*betAmount : betAmount;
+            await AddAmountToUserAsync(user, currencyType, amount);
+            message = "You won " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType);
+            return new CoinFlipResult(isWin, message, amount);
+        }
 }
+//5qHfEqWwAVNnzbuaBzJotrCEICtY66cEEW8w

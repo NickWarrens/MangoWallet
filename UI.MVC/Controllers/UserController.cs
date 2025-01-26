@@ -14,6 +14,11 @@ public class UserController : Controller
 
     public async Task<IActionResult> Users()
     {
+        if (HttpContext.Session.GetString("UserKey") == null)
+        {
+            return RedirectToAction("Manage", "Account");
+        }
+        
         var users = await _manager.GetAllUsersAsync();
         return View(users);
     }
