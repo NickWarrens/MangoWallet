@@ -33,52 +33,61 @@
         modal.style.display = "none";
     };
 
-    // Add event listeners for open buttons
+    // Assign onclick to open buttons
     Object.entries(buttons).forEach(([key, button]) => {
-        button.addEventListener("click", () => {
-            openModal(modals[key]);
+        if (button) {
+            button.onclick = () => {
+                openModal(modals[key]);
 
-            if (key === "addUserCurrency") {
-                // Populate user options dynamically
-                fetch("/Home/GetAllUsers")
-                    .then((response) => response.json())
-                    .then((users) => {
-                        const userKeySelect = document.getElementById("userKey");
-                        userKeySelect.innerHTML = ""; // Clear existing options
-                        users.forEach((user) => {
-                            const option = document.createElement("option");
-                            option.value = user.key;
-                            option.textContent = `${user.name} (Wallet: ${user.walletKey})`;
-                            userKeySelect.appendChild(option);
+                if (key === "addUserCurrency") {
+                    // Populate user options dynamically
+                    fetch("/Home/GetAllUsers")
+                        .then((response) => response.json())
+                        .then((users) => {
+                            const userKeySelect = document.getElementById("userKey");
+                            if (userKeySelect) {
+                                userKeySelect.innerHTML = ""; // Clear existing options
+                                users.forEach((user) => {
+                                    const option = document.createElement("option");
+                                    option.value = user.key;
+                                    option.textContent = `${user.name} (Wallet: ${user.walletKey})`;
+                                    userKeySelect.appendChild(option);
+                                });
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching users:", error);
                         });
-                    });
-            }
-        });
+                }
+            };
+        }
     });
 
-    // Add event listeners for close buttons
+    // Assign onclick to close buttons
     Object.entries(closeButtons).forEach(([key, button]) => {
-        button.addEventListener("click", () => {
-            closeModal(modals[key]);
-        });
+        if (button) {
+            button.onclick = () => {
+                closeModal(modals[key]);
+            };
+        }
     });
 
     // Close modal when clicking outside the modal content
-    window.addEventListener("click", (event) => {
+    window.onclick = (event) => {
         Object.values(modals).forEach((modal) => {
             if (event.target === modal) {
                 closeModal(modal);
             }
         });
-    });
+    };
 
     // Close modal after form submission
     Object.values(modals).forEach((modal) => {
         const form = modal.querySelector("form");
         if (form) {
-            form.addEventListener("submit", () => {
+            form.onsubmit = () => {
                 closeModal(modal);
-            });
+            };
         }
     });
 });
