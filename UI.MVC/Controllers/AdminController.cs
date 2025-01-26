@@ -41,4 +41,11 @@ public class AdminController : Controller
 
         return RedirectToAction("AdminPage");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> AddUser(string username, string passkey)
+    {
+        _manager.AddUserAsync(username, passkey);
+        return RedirectToAction("AdminPage");
+    }
 }

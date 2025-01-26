@@ -122,4 +122,10 @@ public class Manager : IManager
     {
         return await _userRepository.GetAllUsersWithDetails();
     }
+
+    public async void AddUserAsync(string name, string passKey)
+    {
+        User user = new User(name, passKey);
+        await _userRepository.AddAsync(user);
+    }
 }

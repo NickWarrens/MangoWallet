@@ -1,0 +1,89 @@
+﻿/* Page Container */
+#users-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background: var(--bg-primary);
+    color: #fff;
+    font-family: "Trebuchet MS", sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Title Styling */
+#users-title {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+/* Table Container for Centering and Width Control */
+#users-table-container {
+    width: 90%; /* Occupy 90% of the viewport width */
+    max-width: 1500px; /* Limit to 1500px for larger screens */
+    overflow-x: auto; /* Allow horizontal scrolling for smaller viewports */
+    margin: 0 auto;
+}
+
+/* Table Styling */
+#users-table {
+    width: 100%; /* Make the table occupy the full container width */
+    border-collapse: collapse;
+    background: #40424f;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+#users-table th,
+#users-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    word-wrap: break-word; /* Handle content overflow */
+}
+
+#users-table th {
+    background-color: #50535e;
+    font-size: 1.2rem;
+}
+
+#users-table tr:nth-child(even) {
+    background-color: #474a56;
+}
+
+#users-table tr:hover {
+    background-color: #565a66;
+}
+
+#users-table td ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+#users-table td ul li {
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    #users-title {
+        font-size: 2rem;
+    }
+
+    #users-table-container {
+        width: 100%; /* Use full width on smaller screens */
+    }
+
+    #users-table th,
+    #users-table td {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}

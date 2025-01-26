@@ -16,4 +16,5 @@ public interface IManager
     Task<AccountDeletionResult> DeleteAccount(User user, string accountKey);
     Task<User?> GetUserByKey(string passKey);
     Task<IEnumerable<User>> GetAllUsersAsync();
+    void AddUserAsync(string name, string passKey);
 }

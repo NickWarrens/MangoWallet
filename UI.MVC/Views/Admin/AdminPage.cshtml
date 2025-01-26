@@ -46,3 +46,31 @@
         }
     </tbody>
 </table>
+
+<button id="add-user-btn" class="btn">Add New User</button>
+
+<div id="add-user-modal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Add New User</h2>
+        <form asp-action="AddUser" asp-controller="Admin" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+        
+            <label for="passkey">Passkey:</label>
+            <input type="text" id="passkey" name="passkey" required />
+        
+            <button type="submit" class="btn">Add User</button>
+        </form>
+        <button id="close-modal-btn" class="btn btn-danger">Cancel</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('add-user-btn').addEventListener('click', () => {
+        document.getElementById('add-user-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+        document.getElementById('add-user-modal').classList.add('hidden');
+    });
+</script>

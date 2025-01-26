@@ -1,0 +1,41 @@
+﻿@using Domain.Balances
+@using Domain.Currencies.BaseCurrency
+@model IEnumerable<Domain.Users.User>
+
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/Users.css">
+
+<div id="users-page">
+    <h1 id="users-title">Users List</h1>
+
+    <div id="users-table-container">
+        <table id="users-table" class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Wallet Key</th>
+                    <th>Balances</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Name</td>
+                        <td>@user.UserWallet.WalletKey</td>
+                        <td>
+                            <ul>
+                                @foreach (var balance in user.UserWallet?.CurrencyBalances ?? Enumerable.Empty<CurrencyBalance>())
+                                {
+                                    <li>@CurrencyMetaDataProvider.GetCurrencyName(balance.CurrencyType): @balance.Balance</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
