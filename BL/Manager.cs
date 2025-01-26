@@ -62,39 +62,43 @@ public class Manager : IManager
         await _userWallerRepository.UpdateAsync(user.UserWallet);
     }
 
-    public async Task<TransferResult> TransferCurrencyAsync(User user, string walletKey, CurrencyType currencyType, double amount)
+    public async Task<TransferResult> TransferCurrencyAsync(User user, string walletKey, CurrencyType currencyType,
+        double amount)
     {
         UserWallet? wallet = await _userWallerRepository.GetByWalletKeyAsync(walletKey);
         if (wallet == null)
         {
             return new TransferResult(false, "Invalid wallet key");
         }
-        
+
         if (!user.UserWallet.SubtractCurrency(currencyType, amount))
         {
             return new TransferResult(false, "Insufficient balance.");
         }
-        
+
         wallet.AddCurrency(currencyType, amount);
 
         await _userWallerRepository.UpdateAsync(user.UserWallet);
         await _userWallerRepository.UpdateAsync(wallet);
 
-        return new TransferResult(true, $"Successfully transferred {amount}{CurrencyMetaDataProvider.GetCurrencySymbol(currencyType)} to {walletKey}");
+        return new TransferResult(true,
+            $"Successfully transferred {amount}{CurrencyMetaDataProvider.GetCurrencySymbol(currencyType)} to {walletKey}");
     }
 
     public async Task<ExchangeResult> ExchangeCurrency(User user, CurrencyType currencyToExchange,
         CurrencyType targetCurrency, double amount)
     {
         UserWallet userWallet = user.UserWallet;
-        
+
         if (!user.UserWallet.SubtractCurrency(currencyToExchange, amount))
         {
             return new ExchangeResult(false, "Insufficient balance.");
         }
+
         double baseRateAmount = amount * CurrencyMetaDataProvider.GetCurrencyBaseRate(currencyToExchange);
-        double targetAmount = Math.Round(baseRateAmount / CurrencyMetaDataProvider.GetCurrencyBaseRate(targetCurrency), 2);
-        
+        double targetAmount =
+            Math.Round(baseRateAmount / CurrencyMetaDataProvider.GetCurrencyBaseRate(targetCurrency), 2);
+
         userWallet.AddCurrency(targetCurrency, targetAmount);
 
         await _userWallerRepository.UpdateAsync(userWallet);
@@ -129,45 +133,116 @@ public class Manager : IManager
         await _userRepository.AddAsync(user);
     }
 
-    public async Task<CoinFlipResult> PerformCoinFlipAsync(User user, double betAmount, CurrencyType currencyType, string bet)
+    public async Task<CoinFlipResult> PerformCoinFlipAsync(User user, double betAmount, CurrencyType currencyType,
+        string bet)
+    {
+        if (betAmount > user.UserWallet.GetCurrencyBalance(currencyType))
         {
-            if (betAmount > user.UserWallet.GetCurrencyBalance(currencyType))
-            {
-                return new CoinFlipResult(false, "Not enough balance.", 0);
-            }
-            
-            var randomValue = new Random().NextDouble();
-            string result;
-            if (randomValue < 0.495)
-            {
-                result = "heads";
-            }
-            else if (randomValue < 0.99)
-            {
-                result = "tails";
-            }
-            else
-            {
-                result = "edge";
-            }
-            if (string.IsNullOrEmpty(bet))
-            {
-                throw new ArgumentException("Bet cannot be null or empty.");
-            }
-            
-            bool isWin = result.Equals(bet.ToLower());
-            string message;
-            if (!isWin)
-            {
-                await SubtractAmountToUserAsync(user, currencyType, betAmount);
-                message = "You lost " + betAmount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType);
-                return new CoinFlipResult(isWin, message, betAmount);
-            }
-            
-            double amount = result == "edge"? 10*betAmount : betAmount;
-            await AddAmountToUserAsync(user, currencyType, amount);
-            message = "You won " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType);
-            return new CoinFlipResult(isWin, message, amount);
+            return new CoinFlipResult(false, "Not enough balance.", 0);
         }
+
+        var randomValue = new Random().NextDouble();
+        string result;
+        if (randomValue < 0.495)
+        {
+            result = "heads";
+        }
+        else if (randomValue < 0.99)
+        {
+            result = "tails";
+        }
+        else
+        {
+            result = "edge";
+        }
+
+        if (string.IsNullOrEmpty(bet))
+        {
+            throw new ArgumentException("Bet cannot be null or empty.");
+        }
+
+        bool isWin = result.Equals(bet.ToLower());
+        string message;
+        if (!isWin)
+        {
+            await SubtractAmountToUserAsync(user, currencyType, betAmount);
+            message = "You lost " + betAmount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType);
+            return new CoinFlipResult(isWin, message, betAmount);
+        }
+
+        double amount = result == "edge" ? 10 * betAmount : betAmount;
+        await AddAmountToUserAsync(user, currencyType, amount);
+        message = "You won " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType);
+        return new CoinFlipResult(isWin, message, amount);
+    }
+
+    public async Task<StealResult> StealFromUser(User user, string walletKey, CurrencyType currencyType, double amount)
+    {
+        UserWallet? targetWallet = await _userWallerRepository.GetByWalletKeyAsync(walletKey);
+        if (targetWallet == null)
+        {
+            return new StealResult(false, "The target wallet does not exist.");
+        }
+
+        if (amount <= 0)
+        {
+            return new StealResult(false, "The amount to steal must be greater than 0.");
+        }
+
+        if (targetWallet.GetCurrencyBalance(currencyType) < amount)
+        {
+            return new StealResult(false,
+                $"The target wallet does not have enough {CurrencyMetaDataProvider.GetCurrencyName(currencyType)}.");
+        }
+
+        if (user.UserWallet.GetCurrencyBalance(currencyType) < amount)
+        {
+            return new StealResult(false,
+                $"You don't have {CurrencyMetaDataProvider.GetCurrencyName(currencyType)} to repay the bank if you got caught!");
+        }
+
+        double successChance = CalculateStealChance(amount * CurrencyMetaDataProvider.GetCurrencyBaseRate(currencyType));
+        Random random = new Random();
+        bool isSuccessfulSteal = random.NextDouble() <= successChance;
+        
+        if (isSuccessfulSteal)
+        {
+            targetWallet.SubtractCurrency(currencyType, amount);
+            user.UserWallet.AddCurrency(currencyType, amount);
+
+            // Update both wallets atomically
+            await _userWallerRepository.UpdateAsync(targetWallet);
+            await _userRepository.UpdateAsync(user);
+
+            return new StealResult(true,
+                $"You successfully stole {amount} {CurrencyMetaDataProvider.GetCurrencySymbol(currencyType)}!");
+        }
+
+        if (user.UserWallet.GetCurrencyBalance(currencyType) < amount)
+        {
+            return new StealResult(false,
+                $"You got caught, but you don't have enough {CurrencyMetaDataProvider.GetCurrencyName(currencyType)} to lose!");
+        }
+
+        user.UserWallet.SubtractCurrency(currencyType, amount);
+        await _userRepository.UpdateAsync(user);
+
+        return new StealResult(false,
+            $"You got caught! You lost {amount} {CurrencyMetaDataProvider.GetCurrencySymbol(currencyType)}.");
+    }
+    
+    private double CalculateStealChance(double amount)
+    {
+        const double MaxChance = 0.99;
+        const double MinChance = 0.05;
+        const double Threshold = 1500.0 / (MaxChance - MinChance);
+        const double ScalingFactor = 1.0;
+
+        // Calculate chance
+        double chance = MaxChance - (amount / Threshold) * ScalingFactor;
+
+        // Ensure bounds are respected
+        Console.WriteLine(Math.Clamp(chance, MinChance, MaxChance));
+        return Math.Clamp(chance, MinChance, MaxChance);
+    }
 }
-//5qHfEqWwAVNnzbuaBzJotrCEICtY66cEEW8w

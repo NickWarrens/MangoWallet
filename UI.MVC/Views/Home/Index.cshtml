@@ -7,8 +7,15 @@
 }
 
 <link rel="stylesheet" href="~/css/IndexStyle.css" />
-<h1>Welcome back, @Model.Name</h1>
 
+@if (TempData["Feedback"] != null)
+{
+    <div class="feedback @TempData["FeedbackType"]">
+        <p>@TempData["Feedback"]</p>
+    </div>
+}
+
+<h1>Welcome back, @Model.Name</h1>
 <h2>Wallet (@Model.UserWallet.WalletKey):</h2>
 <div class="currency-cards">
     @foreach (var currency in Model.UserWallet.CurrencyBalances)
@@ -23,6 +30,7 @@
 <div class="actions">
     <button class="btn btn-primary" id="exchange-btn">Exchange Currency</button>
     <button class="btn btn-primary" id="transfer-btn">Transfer Currency</button>
+    <button class="btn btn-danger" id="steal-btn">Steal</button>
 
     @if (@Model.IsAdmin)
     {
@@ -40,7 +48,7 @@
     <div class="modal-content">
         <span class="close" id="close-exchange">&times;</span>
         <h3>Exchange Currency</h3>
-        <form method="post" action="@Url.Action("ExchangeCurrency", "Currency")">
+        <form method="post" action="@Url.Action("ExchangeCurrency", "Home")">
             <div class="form-group">
                 <label for="exchangeFrom">From Currency</label>
                 <select id="exchangeFrom" name="fromCurrency" class="form-control" required>
@@ -76,7 +84,7 @@
     <div class="modal-content">
         <span class="close" id="close-transfer">&times;</span>
         <h3>Transfer Currency</h3>
-        <form method="post" action="@Url.Action("TransferCurrency", "Currency")">
+        <form method="post" action="@Url.Action("TransferCurrency", "Home")">
             <div class="form-group">
                 <label for="transferCurrency">Currency</label>
                 <select id="transferCurrency" name="currency" class="form-control" required>
@@ -166,7 +174,36 @@
         </form>
     </div>
 </div>
+<div class="modal" id="steal-modal">
+    <div class="modal-content">
+        <span class="close" id="close-steal">&times;</span>
+        <h3>Steal Currency</h3>
+        <p class="warning">
+            Warning: If the steal attempt fails, you will lose the amount you are trying to steal. Proceed with caution!
+        </p>
+        <form method="post" action="@Url.Action("StealCurrency", "Home")">
+            <div class="form-group">
+                <label for="stealCurrency">Currency</label>
+                <select id="stealCurrency" name="currencyType" class="form-control" required>
+                    @foreach (var currency in Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>())
+                    {
+                        <option value="@currency">@CurrencyMetaDataProvider.GetCurrencyName(currency)</option>
+                    }
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="walletKey">Target Wallet Key</label>
+                <input type="text" id="walletKey" name="walletKey" class="form-control" placeholder="Enter target wallet key" required />
+            </div>
 
+            <div class="form-group">
+                <label for="stealAmount">Amount</label>
+                <input type="number" id="stealAmount" name="amount" class="form-control" min="0.01" step="0.01" required />
+            </div>
 
+            <button type="submit" class="btn btn-danger">Attempt Steal</button>
+        </form>
+    </div>
+</div>
 <script src="~/js/popus.js"></script>

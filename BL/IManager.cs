@@ -18,6 +18,5 @@ public interface IManager
     Task<IEnumerable<User>> GetAllUsersAsync();
     Task AddUserAsync(string name, string passKey);
     Task<CoinFlipResult> PerformCoinFlipAsync(User user, double betAmount, CurrencyType currencyType, string bet);
-    
-    
+    Task<StealResult> StealFromUser(User user, string walletKey, CurrencyType currencyType, double amount);
 }
