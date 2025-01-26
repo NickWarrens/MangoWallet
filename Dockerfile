@@ -16,9 +16,6 @@ RUN dotnet publish UI.MVC/UI.MVC.csproj -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
-# Create and declare a persistent volume for /data
-VOLUME ["/data"]
-
 # Copy published app from the build stage
 COPY --from=build /app/out ./
 
