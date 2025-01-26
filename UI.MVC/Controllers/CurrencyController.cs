@@ -80,65 +80,63 @@ public class CurrencyController : Controller
         }
     }
 
-    public IActionResult TransferCurrency(CurrencyType currency, string walletKey, double amount)
+    [HttpPost]
+    public async Task<IActionResult> TransferCurrency(CurrencyType currency, string walletKey, double amount)
     {
-        // Retrieve the logged-in user
         var userKey = HttpContext.Session.GetString("UserKey");
         if (userKey == null)
         {
-            ViewBag.ErrorMessage = "You must be logged in to transfer currency.";
+            TempData["ErrorMessage"] = "You must be logged in to transfer currency.";
             return RedirectToAction("Index", "Home");
         }
 
-        var user = _manager.GetUserByKey(userKey).Result;
+        var user = await _manager.GetUserByKey(userKey);
         if (user == null)
         {
-            ViewBag.ErrorMessage = "User not found.";
+            TempData["ErrorMessage"] = "User not found.";
             return RedirectToAction("Index", "Home");
         }
-
-        // Perform the transfer
-        var result = _manager.TransferCurrencyAsync(user, walletKey, currency, amount).Result;
+        
+        var result = await _manager.TransferCurrencyAsync(user, walletKey, currency, amount);
 
         if (result.Success)
         {
-            ViewBag.SuccessMessage = result.Message;
+            TempData["SuccessMessage"] = result.Message;
         }
         else
         {
-            ViewBag.ErrorMessage = result.Message;
+            TempData["ErrorMessage"] = result.Message;
         }
 
         return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult ExchangeCurrency(CurrencyType fromCurrency, CurrencyType toCurrency, double amount)
+    [HttpPost]
+    public async Task<IActionResult> ExchangeCurrency(CurrencyType fromCurrency, CurrencyType toCurrency, double amount)
     {
-        // Retrieve the logged-in user
         var userKey = HttpContext.Session.GetString("UserKey");
         if (userKey == null)
         {
-            ViewBag.ErrorMessage = "You must be logged in to exchange currency.";
+            TempData["ErrorMessage"] = "You must be logged in to exchange currency.";
             return RedirectToAction("Index", "Home");
         }
 
-        var user = _manager.GetUserByKey(userKey).Result;
+        var user = await _manager.GetUserByKey(userKey);
         if (user == null)
         {
-            ViewBag.ErrorMessage = "User not found.";
+            TempData["ErrorMessage"] = "User not found.";
             return RedirectToAction("Index", "Home");
         }
-
-        // Perform the exchange
-        var result = _manager.ExchangeCurrency(user, fromCurrency, toCurrency, amount).Result;
+        
+        var result = await _manager.ExchangeCurrency(user, fromCurrency, toCurrency, amount);
 
         if (result.Success)
         {
-            ViewBag.SuccessMessage = result.Message;
+            TempData["SuccessMessage"] = result.Message;
         }
         else
         {
-            ViewBag.ErrorMessage = result.Message;
+            TempData["ErrorMessage"] = result.Message;
         }
 
         return RedirectToAction("Index", "Home");

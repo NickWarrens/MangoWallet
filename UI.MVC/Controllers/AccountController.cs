@@ -45,18 +45,18 @@ public class AccountController : Controller
         if (result.Success)
         {
             ViewBag.SuccessMessage = result.Message;
-            return View(); // Return the same view showing success message
+            return View();
         }
 
         ViewBag.ErrorMessage = result.Message;
-        return View(); // Return the same view showing error message
+        return View();
     }
 
     public IActionResult Login()
     {
         return View();
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> Login(string passKey)
     {
@@ -72,16 +72,16 @@ public class AccountController : Controller
         ViewBag.ErrorMessage = result.Message;
         return View();
     }
-    
+
     [HttpPost]
     public IActionResult LogOut()
     {
         HttpContext.Session.Remove("UserKey");
         return RedirectToAction("Manage");
     }
-    
+
     [HttpPost]
-    public IActionResult DeleteAccount(string accountKey)
+    public async Task<IActionResult> DeleteAccount(string accountKey)
     {
         var userKey = HttpContext.Session.GetString("UserKey");
 
@@ -91,7 +91,7 @@ public class AccountController : Controller
             return RedirectToAction("Manage");
         }
 
-        var user = _manager.GetUserByKey(userKey).Result;
+        var user = await _manager.GetUserByKey(userKey);
         if (user == null)
         {
             ViewBag.ErrorMessage = "User not found.";
@@ -104,7 +104,7 @@ public class AccountController : Controller
             return RedirectToAction("Manage");
         }
 
-        var deletionResult = _manager.DeleteAccount(user, accountKey).Result;
+        var deletionResult = await _manager.DeleteAccount(user, accountKey);
         if (!deletionResult.Success)
         {
             ViewBag.ErrorMessage = deletionResult.Message;

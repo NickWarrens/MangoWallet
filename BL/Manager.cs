@@ -113,9 +113,9 @@ public class Manager : IManager
         return new AccountDeletionResult(true, $"Account for {user.Name} with key {user.Key} deleted succesfully.");
     }
 
-    public Task<User?> GetUserByKey(string passKey)
+    public async Task<User?> GetUserByKey(string passKey)
     {
-        return _userRepository.GetByAccountKeyAsync(passKey);
+        return await _userRepository.GetByAccountKeyAsync(passKey);
     }
 
     public async Task<IEnumerable<User>> GetAllUsersAsync()

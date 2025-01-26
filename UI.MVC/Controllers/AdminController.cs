@@ -30,7 +30,7 @@ public class AdminController : Controller
 
         try
         {
-            User user = _manager.GetUserByKey(userKey).Result;
+            User user = await _manager.GetUserByKey(userKey);
             await _manager.DeleteAccount(user, userKey);
             TempData["SuccessMessage"] = "User deleted successfully.";
         }

@@ -13,7 +13,7 @@ public class HomeController : Controller
         _manager = manager;
     }
     
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         if (HttpContext.Session.GetString("UserKey") == null)
         {
@@ -25,7 +25,7 @@ public class HomeController : Controller
     }
     
     [HttpPost]
-    public IActionResult ManageCurrency(CurrencyType currencyType, double amount, string operation)
+    public async Task<IActionResult> ManageCurrency(CurrencyType currencyType, double amount, string operation)
     {
         var user = _manager.GetUserByKey(HttpContext.Session.GetString("UserKey")).Result;
 
@@ -33,11 +33,11 @@ public class HomeController : Controller
         {
             if (operation == "add")
             {
-                _manager.AddAmountToUserAsync(user, currencyType, amount);
+                await _manager.AddAmountToUserAsync(user, currencyType, amount);
             }
             else if (operation == "subtract")
             {
-                _manager.SubtractAmountToUserAsync(user, currencyType, amount);
+                await _manager.SubtractAmountToUserAsync(user, currencyType, amount);
             }
 
             TempData["SuccessMessage"] = $"{amount} {currencyType} has been successfully {operation}ed.";
@@ -65,7 +65,7 @@ public class HomeController : Controller
     }
     
     [HttpPost]
-    public IActionResult AddCurrencyToUser(string userKey, CurrencyType currency, double amount)
+    public async Task<IActionResult> AddCurrencyToUser(string userKey, CurrencyType currency, double amount)
     {
         if (amount <= 0)
         {
@@ -82,7 +82,7 @@ public class HomeController : Controller
                 return RedirectToAction("Index");
             }
 
-            _manager.AddAmountToUserAsync(user, currency, amount);
+            await _manager.AddAmountToUserAsync(user, currency, amount);
             TempData["SuccessMessage"] = $"{amount} {currency} added to {user.Name}.";
         }
         catch (Exception ex)
