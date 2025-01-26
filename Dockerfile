@@ -16,13 +16,15 @@ RUN dotnet publish UI.MVC/UI.MVC.csproj -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
-# **Create the /app/db directory** to store your database file
-RUN mkdir -p /app/db
-# If needed, give write permissions:
-RUN chmod 777 /app/db
+# Create and declare a persistent volume for /data
+VOLUME ["/data"]
 
+# Copy published app from the build stage
 COPY --from=build /app/out ./
+
+# Set environment variable for app URLs
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 EXPOSE 8080
 
+# Entry point for the application
 ENTRYPOINT ["dotnet", "UI.MVC.dll"]
