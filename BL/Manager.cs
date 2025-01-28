@@ -233,7 +233,7 @@ public class Manager : IManager
     
     private double CalculateStealChance(double amount)
     {
-        const double MaxChance = 0.99;
+        const double MaxChance = 0.60;
         const double MinChance = 0.05;
         const double Threshold = 1500.0 / (MaxChance - MinChance);
         const double ScalingFactor = 1.0;
