@@ -31,13 +31,13 @@ public class CasinoManager : ICasinoManager
         {
             user.UserWallet.SubtractCurrency(currencyType, betAmount);
             await _userRepository.UpdateAsync(user);
-            message = "You won " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType) + "!";
+            message = "You lost " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType) + "...";
         }
         else
         {
             user.UserWallet.AddCurrency(currencyType, amount);
             await _userRepository.UpdateAsync(user);
-            message = "You lost " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType) + "...";
+            message = "You won " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType) + "!";
         }
 
         return new CoinFlipResult(isWin, message, amount);
