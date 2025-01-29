@@ -26,18 +26,21 @@ public class CasinoManager : ICasinoManager
         bool isWin = result.Equals(bet.ToLower());
         double amount = result == "edge" ? 10 * betAmount : betAmount;
 
+        string message;
         if (!isWin)
         {
             user.UserWallet.SubtractCurrency(currencyType, betAmount);
             await _userRepository.UpdateAsync(user);
+            message = "You won " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType) + "!";
         }
         else
         {
             user.UserWallet.AddCurrency(currencyType, amount);
             await _userRepository.UpdateAsync(user);
+            message = "You lost " + amount + CurrencyMetaDataProvider.GetCurrencySymbol(currencyType) + "...";
         }
 
-        return new CoinFlipResult(isWin, isWin ? $"You won {amount}!" : $"You lost {betAmount}.", amount);
+        return new CoinFlipResult(isWin, message, amount);
     }
 
     public async Task<LootBoxResult> OpenLootBoxAsync(User user)
