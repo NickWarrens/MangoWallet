@@ -65,6 +65,18 @@ public class UserWallet
         }
         return balance.Balance;
     }
+
+    public void SetCurrencyBalance(CurrencyType currencyType, double amount)
+    {
+        var balance = CurrencyBalances.FirstOrDefault(cb => cb.CurrencyType == currencyType);
+        if (balance == null)
+        {
+            CurrencyBalance cb = new CurrencyBalance(currencyType);
+            CurrencyBalances.Add(cb);
+            cb.Balance = amount;
+        }
+        balance.Balance = 0;
+    }
     
     public bool HasSufficientFunds(CurrencyType currencyType, double amount)
     {

@@ -48,4 +48,27 @@ public class CasinoController : Controller
         
         return RedirectToAction("Index");
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> OpenLootBox()
+    {
+        var userKey = HttpContext.Session.GetString("UserKey");
+        if (string.IsNullOrEmpty(userKey))
+        {
+            return RedirectToAction("Manage", "Account");
+        }
+
+        var user = await _authManager.GetUserByKey(userKey);
+        if (user == null)
+        {
+            return RedirectToAction("Manage", "Account");
+        }
+
+        var result = await _casinoManager.OpenLootBoxAsync(user);
+
+        TempData["LootBoxResult"] = result.Message;
+        TempData["ResultType"] = result.Success ? "win" : "lose";
+
+        return RedirectToAction("Index");
+    }
 }

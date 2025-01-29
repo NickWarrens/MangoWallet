@@ -7,4 +7,5 @@ namespace BL.CasinoManager;
 public interface ICasinoManager
 {
     Task<CoinFlipResult> PerformCoinFlipAsync(User user, double betAmount, CurrencyType currencyType, string bet);
+    Task<LootBoxResult> OpenLootBoxAsync(User user);
 }

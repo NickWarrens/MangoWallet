@@ -57,8 +57,26 @@
         @if (TempData["FlipResult"] != null)
         {
             <div id="result-container" class="@TempData["ResultType"]">
-                    <p id="result-text">@TempData["FlipResult"]</p>
-                </div>
+                <p id="result-text">@TempData["FlipResult"]</p>
+            </div>
+        }
+    </div>
+    <!-- Loot Box Section -->
+    <div id="loot-box">
+        <h2>Mystery Loot Box</h2>
+        <p>Open a free loot box and win or lose currency!</p>
+    
+        <form asp-action="OpenLootBox" asp-controller="Casino" method="post">
+            <button type="submit" id="open-lootbox-button" class="btn btn-primary">Open Loot Box</button>
+        </form>
+    
+        @if (TempData["LootBoxResult"] != null)
+        {
+            <div id="lootbox-result-container" class="@TempData["ResultType"]">
+                <p id="lootbox-result-text">@TempData["LootBoxResult"]</p>
+            </div>
         }
     </div>
 </div>
+
+<script src="~/js/LootBoxButton.js"></script>
