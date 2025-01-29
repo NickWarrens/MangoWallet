@@ -49,7 +49,7 @@ public class CurrencyFlowManager : ICurrencyFlowManager
             return new ExchangeResult(false, "Insufficient balance.");
 
         double baseRateAmount = amount * CurrencyMetaDataProvider.GetCurrencyBaseRate(currencyToExchange);
-        double targetAmount = Math.Round(baseRateAmount / CurrencyMetaDataProvider.GetCurrencyBaseRate(targetCurrency), 2);
+        double targetAmount = Math.Round(baseRateAmount / CurrencyMetaDataProvider.GetCurrencyBaseRate(targetCurrency), 3);
 
         user.UserWallet.AddCurrency(targetCurrency, targetAmount);
         await _walletRepository.UpdateAsync(user.UserWallet);

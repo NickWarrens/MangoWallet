@@ -33,6 +33,7 @@ public class CurrencyBalance
             throw new ArgumentException("Amount can not be negative");
         }
         Balance += amount;
+        Balance = Math.Round(Balance, 3);
     }
 
     public bool SubtractAmount(double amount)
@@ -46,6 +47,7 @@ public class CurrencyBalance
             return false;
         }
         Balance -= amount;
+        Balance = Math.Round(Balance, 3);
         return true;
     }
 }
