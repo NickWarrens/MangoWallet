@@ -1,15 +1,16 @@
 ﻿using BL;
+using BL.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UI.MVC.Controllers;
 
 public class UserController : Controller
 {
-    private readonly IManager _manager;
+    private readonly IAuthenticationManager _authManager;
 
-    public UserController(IManager manager)
+    public UserController(IAuthenticationManager authManager)
     {
-        _manager = manager;
+        _authManager = authManager;
     }
 
     public async Task<IActionResult> Users()
@@ -19,7 +20,7 @@ public class UserController : Controller
             return RedirectToAction("Manage", "Account");
         }
         
-        var users = await _manager.GetAllUsersAsync();
+        var users = await _authManager.GetAllUsersAsync();
         return View(users);
     }
 }

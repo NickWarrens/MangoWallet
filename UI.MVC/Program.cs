@@ -1,7 +1,10 @@
 using BL;
+using BL.ActionResults;
+using BL.Authentication;
+using BL.CasinoManager;
+using BL.CurrencyFlow;
 using DAL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +22,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<ICurrencyBalanceRepository, CurrencyBalanceRepository>();
 
-builder.Services.AddScoped<IManager, Manager>();
+builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+builder.Services.AddScoped<ICurrencyFlowManager, CurrencyFlowManager>();
+builder.Services.AddScoped<ICasinoManager, CasinoManager>();
+builder.Services.AddScoped<ICrimeManager, CrimeManager>();
 
 builder.Services.AddSession(options =>
 {

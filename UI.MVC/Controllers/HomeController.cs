@@ -1,4 +1,7 @@
 ﻿using BL;
+using BL.ActionResults;
+using BL.Authentication;
+using BL.CurrencyFlow;
 using Domain.Currencies.BaseCurrency;
 using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +10,15 @@ namespace UI.MVC.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly IManager _manager;
-
-    public HomeController(IManager manager)
+    private readonly IAuthenticationManager _authManager;
+    private readonly ICurrencyFlowManager _currencyFlowManager;
+    private readonly ICrimeManager _crimeManager;
+    
+    public HomeController(IAuthenticationManager authManager, ICurrencyFlowManager currencyFlowManager, ICrimeManager crimeManager)
     {
-        _manager = manager;
+        _authManager = authManager;
+        _currencyFlowManager = currencyFlowManager;
+        _crimeManager = crimeManager;
     }
     
     public async Task<IActionResult> Index()
@@ -22,7 +29,7 @@ public class HomeController : Controller
             return RedirectToAction("Manage", "Account");
         }
 
-        User? user = await _manager.GetUserByKey(userKey);
+        User? user = await _authManager.GetUserByKey(userKey);
         if (user == null)
         {
             TempData["Feedback"] = "User not found. Please log in again.";
@@ -44,7 +51,7 @@ public class HomeController : Controller
             return RedirectToAction("Index");
         }
 
-        var user = await _manager.GetUserByKey(userKey);
+        var user = await _authManager.GetUserByKey(userKey);
         if (user == null)
         {
             TempData["Feedback"] = "User not found. Please log in again.";
@@ -56,11 +63,11 @@ public class HomeController : Controller
         {
             if (operation == "add")
             {
-                await _manager.AddAmountToUserAsync(user, currencyType, amount);
+                await _currencyFlowManager.AddAmountToUserAsync(user, currencyType, amount);
             }
             else if (operation == "subtract")
             {
-                await _manager.SubtractAmountToUserAsync(user, currencyType, amount);
+                await _currencyFlowManager.SubtractAmountToUserAsync(user, currencyType, amount);
             }
 
             TempData["Feedback"] = $"{amount} {currencyType} has been successfully {operation}ed.";
@@ -78,7 +85,7 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult GetAllUsers()
     {
-        var users = _manager.GetAllUsersAsync().Result.Select(user => new
+        var users = _authManager.GetAllUsersAsync().Result.Select(user => new
         {
             key = user.Key,
             name = user.Name,
@@ -100,7 +107,7 @@ public class HomeController : Controller
 
         try
         {
-            var user = await _manager.GetUserByKey(userKey);
+            var user = await _authManager.GetUserByKey(userKey);
             if (user == null)
             {
                 TempData["Feedback"] = "User not found.";
@@ -108,7 +115,7 @@ public class HomeController : Controller
                 return RedirectToAction("Index");
             }
 
-            await _manager.AddAmountToUserAsync(user, currency, amount);
+            await _currencyFlowManager.AddAmountToUserAsync(user, currency, amount);
             TempData["Feedback"] = $"{amount} {currency} added to {user.Name}.";
             TempData["FeedbackType"] = "success";
         }
@@ -132,7 +139,7 @@ public class HomeController : Controller
             return RedirectToAction("Index");
         }
 
-        var user = await _manager.GetUserByKey(userKey);
+        var user = await _authManager.GetUserByKey(userKey);
         if (user == null)
         {
             TempData["Feedback"] = "User not found. Please log in again.";
@@ -140,7 +147,7 @@ public class HomeController : Controller
             return RedirectToAction("Index");
         }
         
-        var result = await _manager.StealFromUser(user, walletKey, currencyType, amount);
+        var result = await _crimeManager.StealFromUser(user, walletKey, currencyType, amount);
         
         TempData["Feedback"] = result.Message;
         TempData["FeedbackType"] = result.Success ? "success" : "error";
@@ -159,7 +166,7 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        var user = await _manager.GetUserByKey(userKey);
+        var user = await _authManager.GetUserByKey(userKey);
         if (user == null)
         {
             TempData["Feedback"] = "User not found.";
@@ -167,7 +174,7 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home");
         }
         
-        var result = await _manager.TransferCurrencyAsync(user, walletKey, currency, amount);
+        var result = await _currencyFlowManager.TransferCurrencyAsync(user, walletKey, currency, amount);
 
         TempData["Feedback"] = result.Message;
         TempData["FeedbackType"] = result.Success ? "success" : "error";
@@ -186,7 +193,7 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        var user = await _manager.GetUserByKey(userKey);
+        var user = await _authManager.GetUserByKey(userKey);
         if (user == null)
         {
             TempData["Feedback"] = "User not found.";
@@ -194,7 +201,7 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home");
         }
         
-        var result = await _manager.ExchangeCurrency(user, fromCurrency, toCurrency, amount);
+        var result = await _currencyFlowManager.ExchangeCurrency(user, fromCurrency, toCurrency, amount);
 
         TempData["Feedback"] = result.Message;
         TempData["FeedbackType"] = result.Success ? "success" : "error";

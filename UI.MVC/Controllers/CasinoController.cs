@@ -1,4 +1,6 @@
 ﻿using BL;
+using BL.Authentication;
+using BL.CasinoManager;
 using Domain.Balances;
 using Domain.Currencies.BaseCurrency;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +9,13 @@ namespace UI.MVC.Controllers;
 
 public class CasinoController : Controller
 {
-    private readonly IManager _manager;
+    private readonly IAuthenticationManager _authManager;
+    private readonly ICasinoManager _casinoManager;
 
-    public CasinoController(IManager manager)
+    public CasinoController(IAuthenticationManager authManager, ICasinoManager casinoManager)
     {
-        _manager = manager;
+        _authManager = authManager;
+        _casinoManager = casinoManager;
     }
 
     [HttpGet]
@@ -24,20 +28,20 @@ public class CasinoController : Controller
             return RedirectToAction("Manage", "Account");
         }
 
-        var user = await _manager.GetUserByKey(userKey);
+        var user = await _authManager.GetUserByKey(userKey);
         return View(user);
     }
 
     [HttpPost]
     public async Task<IActionResult> CoinFlip(double betAmount, CurrencyType currencyType, string bet)
     {
-        var user = await _manager.GetUserByKey(HttpContext.Session.GetString("UserKey"));
+        var user = await _authManager.GetUserByKey(HttpContext.Session.GetString("UserKey"));
         if (user == null)
         {
             return RedirectToAction("Manage", "Account");
         }
 
-        var result = await _manager.PerformCoinFlipAsync(user, betAmount, currencyType, bet);
+        var result = await _casinoManager.PerformCoinFlipAsync(user, betAmount, currencyType, bet);
 
         TempData["FlipResult"] = result.Message;
         TempData["ResultType"] = result.Success ? "win" : "lose";

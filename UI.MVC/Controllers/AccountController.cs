@@ -1,4 +1,5 @@
 ﻿using BL;
+using BL.Authentication;
 using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,9 +7,9 @@ namespace UI.MVC.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly IManager _manager;
+    private readonly IAuthenticationManager _manager;
 
-    public AccountController(IManager manager)
+    public AccountController(IAuthenticationManager manager)
     {
         _manager = manager;
     }
