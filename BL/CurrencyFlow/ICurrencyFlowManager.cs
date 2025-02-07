@@ -10,4 +10,5 @@ public interface ICurrencyFlowManager
     Task AddAmountToUserAsync(User user, CurrencyType currencyType, double amount);
     Task SubtractAmountToUserAsync(User user, CurrencyType currencyType, double amount);
     Task<ExchangeResult> ExchangeCurrency(User user, CurrencyType currencyToExchange, CurrencyType targetCurrency, double amount);
+    Task<ExchangeResult> AutoExchangeCurrency(User user);
 }

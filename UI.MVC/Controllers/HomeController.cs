@@ -208,4 +208,31 @@ public class HomeController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> AutoExchangeCurrency()
+    {
+        var userKey = HttpContext.Session.GetString("UserKey");
+        if (string.IsNullOrEmpty(userKey))
+        {
+            TempData["Feedback"] = "You must be logged in to auto-exchange.";
+            TempData["FeedbackType"] = "error";
+            return RedirectToAction("Index", "Home");
+        }
+
+        var user = await _authManager.GetUserByKey(userKey);
+        if (user == null)
+        {
+            TempData["Feedback"] = "User not found.";
+            TempData["FeedbackType"] = "error";
+            return RedirectToAction("Index", "Home");
+        }
+
+        var result = await _currencyFlowManager.AutoExchangeCurrency(user);
+
+        TempData["Feedback"] = result.Message;
+        TempData["FeedbackType"] = result.Success ? "success" : "error";
+
+        return RedirectToAction("Index", "Home");
+    }
 }

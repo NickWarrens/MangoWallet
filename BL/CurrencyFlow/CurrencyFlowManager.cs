@@ -55,4 +55,53 @@ public class CurrencyFlowManager : ICurrencyFlowManager
         await _walletRepository.UpdateAsync(user.UserWallet);
         return new ExchangeResult(true, $"Exchanged {amount} {currencyToExchange} to {targetAmount} {targetCurrency}");
     }
+
+    public async Task<ExchangeResult> AutoExchangeCurrency(User user)
+    {
+        UserWallet wallet = user.UserWallet;
+        
+        if (wallet == null)
+        {
+            return new ExchangeResult(false, "Wallet was not found.");
+        }
+
+        double totalBaseValue = wallet.GetTotalValueInBaseCurrency();
+        if (totalBaseValue <= 0)
+        {
+            return new ExchangeResult(false, "Insufficient balance to exchange.");
+        }
+        
+        foreach (var balance in wallet.CurrencyBalances)
+        {
+            balance.Balance = 0;
+        }
+        
+        var currencyTypes = Enum.GetValues(typeof(CurrencyType))
+            .Cast<CurrencyType>()
+            .OrderBy(c => CurrencyMetaDataProvider.GetCurrencyBaseRate(c))
+            .Reverse()
+            .ToList();
+
+        bool exchanged = false;
+        
+        foreach (var currency in currencyTypes)
+        {
+            double baseRate = CurrencyMetaDataProvider.GetCurrencyBaseRate(currency);
+            double minAmountNeeded = 0.001 * baseRate;  
+
+            if (totalBaseValue >= minAmountNeeded)
+            {
+                double convertedAmount = Math.Floor(totalBaseValue / baseRate * 1000) / 1000; // Rounding to 3 decimals
+                totalBaseValue -= convertedAmount * baseRate;
+                wallet.AddCurrency(currency, convertedAmount);
+                exchanged = true;
+            }
+        }
+        
+        await _walletRepository.UpdateAsync(wallet);
+
+        return exchanged
+            ? new ExchangeResult(true, "Successfully auto exchanged!.")
+            : new ExchangeResult(false, "Could not exchange any currency.");
+    }
 }

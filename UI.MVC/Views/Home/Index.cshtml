@@ -29,10 +29,13 @@
 
 <div class="actions">
     <button class="btn btn-primary" id="exchange-btn">Exchange Currency</button>
+    <form asp-action="AutoExchangeCurrency" asp-controller="Home" method="post">
+        <button type="submit" class="btn btn-primary" id="auto-exchange-btn">Auto-exchange</button>
+    </form>
     <button class="btn btn-primary" id="transfer-btn">Transfer Currency</button>
     <button class="btn btn-danger" id="steal-btn">Steal</button>
 
-    @if (@Model.IsAdmin)
+    @if (Model.IsAdmin)
     {
         <button class="btn btn-secondary" id="manage-currency-btn">Add/Subtract Coins</button>
         <button class="btn btn-secondary" id="add-user-currency-btn">Add Currency to User</button>
