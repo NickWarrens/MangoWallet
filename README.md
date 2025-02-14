@@ -1,0 +1,1 @@
+# MangoCoin.store
